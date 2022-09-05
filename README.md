@@ -1,13 +1,20 @@
-# Script to upload KAB distribution
+# Snapshot and upload distribution
 
-This repo is used along with Relay Scheduler pallet to upload the distribution to Kabocha network. 
+The features here allow you to take a snpashot of a current chain and put them in a file that can then be used to upload to a new chain that has the custom relay scheduler pallet.
+
+This repo is used along with Relay Scheduler pallet to snapshot a upload the distribution to Kabocha network. 
 
 ## Install
-To install after you clone the repo:
+
+Clone repo:
+
+`git clone https://github.com/decentration/snapshot-upload.git`
+
+Install:
 
 `yarn`
 
-## Install and set the relay scheduler
+## Install and setup the relay scheduler
 Add the custom Relay Scheduler pallet also in the Kabocha repos. 
 set `atBlockNumberNumber` which is the blocknumber when all balances will be unreserved. 
 
@@ -18,3 +25,7 @@ adjust endpoint, crowdloan.json, balances.json to needs.
 ## Commands
 
 `node --experimental-json-modules setup.js`
+
+## Node version
+
+Works with `v14.18.1`

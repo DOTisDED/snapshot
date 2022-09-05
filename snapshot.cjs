@@ -7,7 +7,7 @@ const fs = require('fs').promises;
 const { spec } = require('@polkadot/types');
 
 const config = {
-    blockNumber: 319943,
+    blockNumber: 395000,
     endpoint: "wss://kabocha.jelliedowl.com/",
     decimals: 12
 }
@@ -19,8 +19,8 @@ var global = {
 };
 
 // Convert a big number balance to expected float with correct units.
-function toUnit(balance, decimals) {
-    base = new BN(10).pow(new BN(decimals));
+function toUnit(balance) {
+    base = new BN(10).pow(new BN(12));
     dm = new BN(balance).divmod(base);
     output = parseFloat(dm.div.toString(), ".", dm.mod.toString())
     let decinum = (output / (10 ** 12))

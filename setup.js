@@ -9,9 +9,9 @@ import {
 	decodeAddress,
 } from '@polkadot/util-crypto';
 
-import balances from "../../balances/balances.json"// assert {type: "json"};
-import total_issuance from '../../issuance.json'// assert {type: "json"};
-import crowdloan from '../../balances/crowdloan.json'// assert {type: "json"};
+import balances from "./balances.json"// assert {type: "json"};
+import total_issuance from './issuance.json'// assert {type: "json"};
+import crowdloan from './crowdloan.json'// assert {type: "json"};
 import 'dotenv/config'
 
 const prod_config = {
@@ -70,7 +70,7 @@ export async function connect() {
 	return api
 }
 
-export function compute__contrib() {
+export function compute_total_contrib() {
 	let total = 0;
 	for (let contrib in crowdloan) {
 		total += crowdloan[contrib]
@@ -232,7 +232,7 @@ async function setupAccounts() {
 	}
 }
 
-setupAccounts();
+// setupAccounts();
 
 // function compute_total_issuance() {
 // 	let issuance = 0

@@ -2,7 +2,7 @@ import '@polkadot/api-augment/kusama'
 import { WsProvider, ApiPromise } from "@polkadot/api";
 import { Keyring } from '@polkadot/keyring';
 // import fs from 'fs/promises';
-import { hexToNumber, bnToHex, hexToBigInt, u8aToHex } from "@polkadot/util";
+import { BN, hexToNumber, bnToHex, hexToBigInt, u8aToHex } from "@polkadot/util";
 import {
   createKeyMulti,
   encodeAddress,
@@ -10,19 +10,21 @@ import {
 } from '@polkadot/util-crypto';
 import * as fs from 'fs/promises';
 
-import balances from "../../balances.json"// assert {type: "json"};
-import total_issuance from '../../issuance.json'// assert {type: "json"};
+import balances from "./balances.json"// assert {type: "json"};
+import total_issuance from './issuance.json'// assert {type: "json"};
 import crowdloan from './crowdloan.json'// assert {type: "json"};
 
 import { convertAddresses, compute_total_contrib, connect, config } from "./setup.js";
 
-function toUnit(balance) {
-  let bi = hexToBigInt(bnToHex(balance));
-  let mod = 10n ** 12n
-  var div = bi / mod
 
-  return parseFloat(div) + parseFloat(bi - div * mod) / parseFloat(mod);
-}
+// Convert a big number balance to expected float with correct units.
+function toUnit(balance) {
+    let base = new BN(10).pow(new BN(12));
+    let dm = new BN(balance).divmod(base);
+    let output = parseFloat(dm.div.toString(), ".", dm.mod.toString())
+    let decinum = (output / (10 ** 12))
+    return output
+} 
 
 async function checkBalances() {
 
@@ -84,19 +86,31 @@ async function checkBalances() {
 	  // i get a BN, i have to convert it ! look at kusama crowdloan snapshot.
 	  // console.log(fetched_balance.data.free)
 	  // process.exit(0)
-	  const got = parseInt((toUnit(fetched_balance.data.free) + toUnit(fetched_balance.data.reserved)) * 10 ** 12)
-	  const expected = parseInt(new_balance)
+	  console.log(fetched_balance.data.free)
+	  // if fetchedBalance.Total > the existencial deposit
+	
+	  
+	  //const expected = parseInt(new_balance)
+	  //const got_free = parseInt(toUnit(fetched_balance.data.free))
+	  const got_free = parseInt(toUnit(fetched_balance.data.free) * 10 ** 12)
+	  const got_reserved = parseInt(toUnit(fetched_balance.data.reserved) * 10 ** 12)
+	  const got = got_free + got_reserved
 
-	  if (Math.abs(got - expected) > 1000) {
+	  const expected_free = parseInt(((account.Free + account.Reserved) / 100) * 10 ** 12) * (3 / 10)
+	  const expected_reserve = parseInt(((account.Free + account.Reserved) / 100) * 10 ** 12) * (7 / 10)
+
+	  
+	  if ((Math.abs(got_free - expected_free) > 10000) && (Math.abs(got_reserved - expected_reserve) > 10000)) {
 		i += 1
-		const err = "mismatched balance on address " + address + " ->\n" + "total - got " + got + ", expected " + expected + "\ndifference of " + Math.round((Math.abs(got - expected) / (10 ** 12)))
+		const err = "Mismatched balance on address " + address + " ->\n" + "total - got free " + got_free + " and reserved " + got_reserved + ", expected free " + expected_free + " and reserved " + expected_reserve + "\ndifference of " + Math.round((Math.abs(expected_free - got_free))) + ", and " + Math.round((Math.abs(expected_reserve - got_reserved))) // Math.round((Math.abs(got - expected) / (10 ** 12))
+		
 		console.log(err)
 		console.log("trying a fix...")
-		const free_balance = parseInt((expected * (3 / 10)))
-		const reserved_balance = parseInt((expected * (7 / 10)))
+		const free_balance = parseInt(((expected_free + expected_reserve) * (3 / 10)))
+		const reserved_balance = parseInt(((expected_free + expected_reserve) * (7 / 10)))
 
-		await api.tx.sudo.sudo(api.tx.balances.setBalance(address, free_balance.toString(), reserved_balance.toString())).signAndSend(sudo, { nonce: -1 })
-		await api.tx.sudo.sudo(api.tx.relaySchedule.schedule(api.tx.balances.forceUnreserve(address, reserved_balance.toString()))).signAndSend(sudo, { nonce: -1 })
+		//await api.tx.sudo.sudo(api.tx.balances.setBalance(address, free_balance.toString(), reserved_balance.toString())).signAndSend(sudo, { nonce: -1 })
+		//await api.tx.sudo.sudo(api.tx.relaySchedule.schedule(api.tx.balances.forceUnreserve(address, reserved_balance.toString()))).signAndSend(sudo, { nonce: -1 })
 		await fs.appendFile('missmatch.json', err);
 	  }
 
@@ -140,7 +154,7 @@ async function getTotalIssuance() {
 	const api = await connect();
 
 	console.log("querying the total issuance")
-	let total_issuance = toUnit(await api.query.balances.totalIssuance())
+	let total_issuance = toUnit(await api.query.balances.totalIssuance(), 12)
 
 	let data = {
 	  issuance: total_issuance,
