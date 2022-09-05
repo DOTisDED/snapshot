@@ -21,9 +21,7 @@ import { convertAddresses, compute_total_contrib, connect, config } from "./setu
 function toUnit(balance) {
     let base = new BN(10).pow(new BN(12));
     let dm = new BN(balance).divmod(base);
-    let output = parseFloat(dm.div.toString(), ".", dm.mod.toString())
-    let decinum = (output / (10 ** 12))
-    return output
+    return parseFloat(dm.div.toString() + "." + dm.mod.toString().padStart(12,'0'))
 } 
 
 async function checkBalances() {
