@@ -84,7 +84,7 @@ async function checkBalances() {
 	  // i get a BN, i have to convert it ! look at kusama crowdloan snapshot.
 	  // console.log(fetched_balance.data.free)
 	  // process.exit(0)
-	  console.log(fetched_balance.data.free)
+	  console.log(toUnit(fetched_balance.data.free))
 	  // if fetchedBalance.Total > the existencial deposit
 	
 	  
@@ -98,17 +98,19 @@ async function checkBalances() {
 	  const expected_reserve = parseInt(((account.Free + account.Reserved) / 100) * 10 ** 12) * (7 / 10)
 
 	  
-	  if ((Math.abs(got_free - expected_free) > 10000) && (Math.abs(got_reserved - expected_reserve) > 10000)) {
+	  if ((Math.abs(expected_free - got_free) > 1000) && (Math.abs(expected_reserve - got_reserved > 1000)) && (Math.abs(expected_free + expected_reserve) > 999999993)) {
+		console.log()
+		
 		i += 1
-		const err = "Mismatched balance on address " + address + " ->\n" + "total - got free " + got_free + " and reserved " + got_reserved + ", expected free " + expected_free + " and reserved " + expected_reserve + "\ndifference of " + Math.round((Math.abs(expected_free - got_free))) + ", and " + Math.round((Math.abs(expected_reserve - got_reserved))) // Math.round((Math.abs(got - expected) / (10 ** 12))
+		const err = "Mismatched balance on address " + address + " ->\n" + "total - got free " + got_free + " and reserved " + got_reserved + ", expected free " + expected_free + " and reserved " + expected_reserve + "\ndifference of " + (Math.abs(expected_free - got_free)) + ", and " + (Math.abs(expected_reserve - got_reserved)) // Math.round((Math.abs(got - expected) / (10 ** 12))
 		
 		console.log(err)
 		console.log("trying a fix...")
-		const free_balance = parseInt(((expected_free + expected_reserve) * (3 / 10)))
-		const reserved_balance = parseInt(((expected_free + expected_reserve) * (7 / 10)))
+		const free_balance = parseInt(expected_free)
+		const reserved_balance = parseInt(expected_reserve)
 
-		//await api.tx.sudo.sudo(api.tx.balances.setBalance(address, free_balance.toString(), reserved_balance.toString())).signAndSend(sudo, { nonce: -1 })
-		//await api.tx.sudo.sudo(api.tx.relaySchedule.schedule(api.tx.balances.forceUnreserve(address, reserved_balance.toString()))).signAndSend(sudo, { nonce: -1 })
+		await api.tx.sudo.sudo(api.tx.balances.setBalance(address, free_balance.toString(), reserved_balance.toString())).signAndSend(sudo, { nonce: -1 })
+		await api.tx.sudo.sudo(api.tx.relaySchedule.schedule(api.tx.balances.forceUnreserve(address, reserved_balance.toString()))).signAndSend(sudo, { nonce: -1 })
 		await fs.appendFile('missmatch.json', err);
 	  }
 
