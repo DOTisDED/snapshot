@@ -1,11 +1,3 @@
-{
-  "type": "module",
-  "dependencies": {
-    "@edgeware/node-types": "^3.6.2-wako",
-    "@polkadot/api": "^8.12.2",
-    "@polkadot/keyring": "^10.0.2",
-    "@polkadot/util": "^10.0.2",
-    "@polkadot/util-crypto": "^10.0.2",
-    "dotenv": "^16.0.1"
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:bbaf8336f4458fc913148993457029e46839c8cbc3418b019da16da8b16e1a5a
+size 257
