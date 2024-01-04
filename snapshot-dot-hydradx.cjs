@@ -2,15 +2,15 @@ const { BN } = require("@polkadot/util");
 const { encodeAddress } = require("@polkadot/util-crypto");
 const { WsProvider, ApiPromise } = require("@polkadot/api");
 const fs = require('fs');
-const lastKeyFile = 'lastKey2.txt';
+const lastKeyFile = 'lastKey.txt';
 
 
 //const { spec } = require('@edgeware/node-types');
 const { spec } = require('@polkadot/types');
 
 const config = {
-    blockNumber: 18871235,
-    endpoint: "wss://dot-rpc.stakeworld.io/",
+    blockNumber: 4182000,
+    endpoint: "wss://hydradx-rpc.dwellir.com/",
     decimals: 10
 }
 
@@ -117,7 +117,7 @@ async function takeSnapshot() {
         console.log("connecting...");
         const api = await connect();
         let lastKey = null;
-        let pageSize = 1000;
+        let pageSize = 100;
         let page = 1;
 
         // Check if there's a saved lastKey and resume from there
@@ -145,20 +145,13 @@ async function takeSnapshot() {
             let balances = {};
             pageAccounts.forEach(account => {
                 let address = encodeAddress(account[0].slice(-32));
-                let accountData = account[1].data;
-
-                let free = accountData.free || new BN(0);
-                let reserved = accountData.reserved || new BN(0);
-                let locked = accountData.frozen || new BN(0); 
-                
-                let total = free.add(reserved).add(locked);
-
+                let free = account[1].data.free;
+                let reserved = account[1].data.reserved;
                 balances[address] = {
                     "AccountId": address,
                     "Free": toUnit(free),
                     "Reserved": toUnit(reserved),
-                    "Locked": toUnit(locked),
-                    "Total": toUnit(total),
+                    "Total": toUnit(free.add(reserved)),
                 };
             });
 
