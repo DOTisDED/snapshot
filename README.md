@@ -1,8 +1,7 @@
 # Snapshot and upload distribution
 
-The features here allow you to take a snpashot of a current chain and put them in a file that can then be used to upload to a new chain that has the custom relay scheduler pallet.
+This repo lets you take a snapshot of a chain based on blocknumber
 
-This repo is used along with Relay Scheduler pallet to snapshot a upload the distribution to Kabocha network. 
 
 ## Install
 
@@ -14,18 +13,9 @@ Install:
 
 `yarn`
 
-## Install and setup the relay scheduler
-Add the custom Relay Scheduler pallet also in the Kabocha repos. 
-set `atBlockNumberNumber` which is the blocknumber when all balances will be unreserved. 
-
-## Adjust Parameters
-
-adjust endpoint, crowdloan.json, balances.json to needs.
 
 ## Commands
 
-`node --experimental-json-modules setup.js`
+run the below command to execute a snapshot based on the files. Each file is for a different chain. 
 
-## Node version
-
-Works with `v14.18.1`
+`node ./`NAME_OF_SNAPSHOT_FILE.cjs`
