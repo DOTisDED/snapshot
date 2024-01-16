@@ -29,7 +29,7 @@ Install:
 go to config.cjs and enter the info the snapshot. 
 
 
-# Execute Snapshot 
+# 2. Execute Snapshot 
 
 run the below command to execute a snapshot based on the files. Each file is for a different chain. 
 
@@ -47,18 +47,18 @@ Go to `utils/countAccounts.cjs` and change the `filePath` to the name of the jso
 
 `node ./utils/countAccounts.cjs`
 
-# Merge Accounts
+# 3. Merge Accounts
 
 Merge system chain balances to snapshot
 
 
-# Replace keyless accounts
+# 4. Replace keyless accounts
 
 Replace the keyless addresses that become inaccessible once they are added as a AssetHub token asset. 
 Replace for a new accessible address. Like a sudo key or a multisig. Then you can use that to redistribute elsewhere. 
 
 
-# Crowdloan Handling
+# 5. Crowdloan Handling
 
 find which crowdloans are active at the snapshot blocknumber then reallocate the funds to the depositor address fro distribution to uses, and to incentivise the parachain to make hrmp channel with Asset Hub. 
 
@@ -86,7 +86,7 @@ Contributions for paraId 3356 saved.
 Contributions for paraId 3354 saved.
 ```
 
-# Nomination Pool Management
+# 6. Nomination Pool Management
 
 Because nomination pools are keylesses address we need to reallocate the funds back to its users. 
 
@@ -111,7 +111,7 @@ first we get the pool members `node ./nominationPools/fetchPoolMembers.cjs` whic
 Once we have the pool IDs we need to run a script that finds the addresses in the snapshot, and if that pool ID address exists in the snapshot then we remove the address. Why? Because the total funds are already accounted for when we re-allocate funds back to users. 
 
 
-# Pure Proxy Management 
+# 7. Pure Proxy Management 
 
 re-allocating funds in a pure proxy back to its owner(s)
 
