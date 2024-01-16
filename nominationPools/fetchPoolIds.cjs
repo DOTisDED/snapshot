@@ -22,7 +22,7 @@ for (let i = 1; i <= 600; i++) {
 }
 
 // Write to a JSON file
-fs.writeFile('poolAddresses.json', JSON.stringify(poolAddresses, null, 2), (err) => {
+fs.writeFile('./nominationPools/poolAddresses.json', JSON.stringify(poolAddresses, null, 2), (err) => {
   if (err) {
     console.error(err);
     return;

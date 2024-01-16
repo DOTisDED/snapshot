@@ -6,6 +6,7 @@ const fs = require('fs');
 
     const wsProvider = new WsProvider('wss://polkadot-rpc.dwellir.com');
     const outputFile = `./nominationPools/${config.accountsFromPools}`; 
+    const blocknumber = config.blockNumber;
 
     async function fetchAndSaveNominatorPools(blockNumber) {
         const api = await ApiPromise.create({ provider: wsProvider });
@@ -50,4 +51,4 @@ const fs = require('fs');
         }
     }
     
-    fetchAndSaveNominatorPools(18871235);
+    fetchAndSaveNominatorPools(blocknumber);
