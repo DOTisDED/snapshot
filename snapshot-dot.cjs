@@ -2,7 +2,7 @@ const { BN } = require("@polkadot/util");
 const { encodeAddress } = require("@polkadot/util-crypto");
 const { WsProvider, ApiPromise } = require("@polkadot/api");
 const fs = require('fs');
-const lastKeyFile = 'lastKey2.txt';
+const lastKeyFile = 'lastKeyDwellir2.txt';
 
 
 //const { spec } = require('@edgeware/node-types');
@@ -10,7 +10,7 @@ const { spec } = require('@polkadot/types');
 
 const config = {
     blockNumber: 18871235,
-    endpoint: "wss://dot-rpc.stakeworld.io/",
+    endpoint: "wss://polkadot-rpc.dwellir.com/",
     decimals: 10
 }
 
@@ -86,29 +86,6 @@ async function getTotalIssuance() {
     }
 }
 
-async function fetchAccountsInBatches(api, batchSize) {
-    let allAccounts = [];
-    let hasMore = true;
-    let lastKey = null;
-
-    while (hasMore) {
-        const batch = await api.query.system.account.entriesPaged({
-            startKey: lastKey,
-            pageSize: batchSize,
-        });
-
-        if (batch.length > 0) {
-            allAccounts.push(...batch);
-            lastKey = batch[batch.length - 1][0];
-        } else {
-            hasMore = false;
-        }
-    }
-
-    return allAccounts;
-}
-
-
 
 // Main function
 
@@ -120,15 +97,13 @@ async function takeSnapshot() {
         let pageSize = 1000;
         let page = 1;
 
-        // Check if there's a saved lastKey and resume from there
         if (fs.existsSync(lastKeyFile)) {
             const lastKeyData = fs.readFileSync(lastKeyFile, 'utf8');
             lastKey = lastKeyData.split('-')[0];
             page = parseInt(lastKeyData.split('-')[1]) + 1;
         }
 
-        // Use a write stream for efficient file writing
-        const fileStream = fs.createWriteStream('dot-balances-new.json', { flags: 'a' });
+        const fileStream = fs.createWriteStream('dot-balances-new-dwellir2.json', { flags: 'a' });
 
         while (true) {
             console.log(`querying account entries... page: ${page}`);
@@ -139,10 +114,9 @@ async function takeSnapshot() {
             });
 
             if (pageAccounts.length === 0) {
-                break; // No more accounts to fetch
+                break;
             }
 
-            let balances = {};
             pageAccounts.forEach(account => {
                 let address = encodeAddress(account[0].slice(-32));
                 let accountData = account[1].data;
@@ -150,22 +124,16 @@ async function takeSnapshot() {
                 let free = accountData.free || new BN(0);
                 let reserved = accountData.reserved || new BN(0);
                 let locked = accountData.frozen || new BN(0); 
-                
                 let total = free.add(reserved).add(locked);
 
-                balances[address] = {
-                    "AccountId": address,
-                    "Free": toUnit(free),
-                    "Reserved": toUnit(reserved),
-                    "Locked": toUnit(locked),
-                    "Total": toUnit(total),
+                let accountBalance = {
+                    "AccountId": address, "Free": toUnit(free), "Reserved": toUnit(reserved), "Locked": toUnit(locked), "Total": toUnit(total),
                 };
+
+                // Write each account on a separate line
+                fileStream.write(JSON.stringify(accountBalance) + '\n');
             });
 
-            // Append data for this page
-            fileStream.write(JSON.stringify(balances, null, 2) + '\n');
-
-            // Save the lastKey for the next iteration
             lastKey = pageAccounts[pageAccounts.length - 1][0];
             fs.writeFileSync(lastKeyFile, `${lastKey}-${page}`);
 
@@ -174,6 +142,7 @@ async function takeSnapshot() {
 
         console.log("Snapshot taken successfully.");
         fileStream.end(); // Close the file stream
+
     } catch (error) {
         console.error("Error occurred:", error);
     } finally {
@@ -182,8 +151,3 @@ async function takeSnapshot() {
 }
 
 takeSnapshot();
-
-
-
-
-// getTotalIssuance();
