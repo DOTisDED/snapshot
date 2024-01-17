@@ -32,14 +32,21 @@ go to config.cjs and enter the info the snapshot.
 # 2. Execute Snapshot 
 
 run the below command to execute a snapshot based on the files. Each file is for a different chain. 
+```
+node ./`NAME_OF_SNAPSHOT_FILE.cjs // name the file in the localConfig within the snapshot-dot.cjs file.
+``` 
 
-`node ./`NAME_OF_SNAPSHOT_FILE.cjs`
-
-_For Polkadot blockchain this takes around 20 to 30 minutes._
+_For Polkadot blockchain this takes around 10 minutes._
 
 ## Snapshots for System Chains
 
+With the system chain files such as `./snapshot/snapshot-dot-assethub.cjs` we first need to get the parachain blocknumber that is connected to our relay chain snapshot number. 
+
+We need to get the paraHead and look at the backedCandidates to find the blockHash for the system chain we want to snapshot. The script gets `rpc -> chain -> getBlockHash(blockNumber)` and then `rpc ->  chain -> getBlock(hash)` and then gets the paraHead (aka blockHash) from backedCandidates. 
+
+
 Just change the rpc and name of the output file to produce snapshots for the different chains. 
+
 
 ## Count number of accounts in a snapshot
 
@@ -47,18 +54,9 @@ Go to `utils/countAccounts.cjs` and change the `filePath` to the name of the jso
 
 `node ./utils/countAccounts.cjs`
 
-# 3. Merge Accounts
-
-Merge system chain balances to snapshot
 
 
-# 4. Replace keyless accounts
-
-Replace the keyless addresses that become inaccessible once they are added as a AssetHub token asset. 
-Replace for a new accessible address. Like a sudo key or a multisig. Then you can use that to redistribute elsewhere. 
-
-
-# 5. Crowdloan Handling
+# 3. Crowdloan Handling
 
 find which crowdloans are active at the snapshot blocknumber then reallocate the funds to the depositor address fro distribution to uses, and to incentivise the parachain to make hrmp channel with Asset Hub. 
 
@@ -89,7 +87,7 @@ Contributions for paraId 3356 saved.
 Contributions for paraId 3354 saved.
 ```
 
-# 6. Nomination Pool Management
+# 4. Nomination Pool Management
 
 Because nomination pools are keylesses address we need to reallocate the funds back to its users. 
 
@@ -116,12 +114,32 @@ first we get the pool members `node ./nominationPools/fetchPoolMembers.cjs` whic
 2. Then we will use these IDs and remove them from our snapshot. 
 Once we have the pool IDs we need to run a script that finds the addresses in the snapshot, and if that pool ID address exists in the snapshot then we remove the address. Why? Because the total funds are already accounted for when we re-allocate funds back to users. 
 
+# 5. Merge Accounts
 
-# 7. Pure Proxy Management 
+Merge system chain balances to snapshot
+
+
+
+# 6. Pure Proxy Management 
 
 re-allocating funds in a pure proxy back to its owner(s)
 
 Pure Proxies (previously anonymous proxies) are keyless accounts that we need to handle. 
+
+# 7. Replace keyless accounts
+
+Replace the keyless addresses that become inaccessible once they are added as a AssetHub token asset. 
+Replace for a new accessible address. Like a sudo key or a multisig. Then you can use that to redistribute elsewhere. 
+
+keyless accounts we cover:
+
+- crowdloans
+- nominationPools
+- Treasury (will not touch)
+- pureProxy / anonymousProxy
+- Sovereign Accounts (accessible if hrmp channel connected)
+
+
 
 # 8. Distribute Snapshot to Chain
 
@@ -137,8 +155,11 @@ Add Totals in snapshot by calling `node ./utils/addTotals.cjs`
 - If the snapshot download stops you can restart it and it will continue from where it paused using a "lastKey".
 - when re-attempting a snapshot, dont forget to delete or rename the file and delete the lastKey.json so that it starts again. 
 
-# TODO/Improvements
+# TODO
+- script to get para head and save it. 
+- pure proxy script
 
+# Improvements
 - Automate through all scripts
 - replace manual work for scripted
 - update common JS. 

@@ -2,17 +2,23 @@ const { BN } = require("@polkadot/util");
 const { encodeAddress } = require("@polkadot/util-crypto");
 const { WsProvider, ApiPromise } = require("@polkadot/api");
 const fs = require('fs');
-const lastKeyFile = 'lastKeyDwellir2.txt';
 
 
 //const { spec } = require('@edgeware/node-types');
 const { spec } = require('@polkadot/types');
+const config = require('../config.cjs');
 
-const config = {
+const  localConfig = {
     blockNumber: 18871235,
     endpoint: "wss://polkadot-rpc.dwellir.com/",
-    decimals: 10
+    decimals: 10,
+    lastKeyFile: './lastKeyDwellir5.txt',
+    fileName: './dot-balances-new-dwellir5.json',
 }
+
+const lastKeyFile = localConfig.lastKeyFile;
+const fileName = localConfig.fileName;  
+
 
 // Global Variables
 var global = {
@@ -22,10 +28,10 @@ var global = {
 
 
 // function toUnit(balance) {
-//     base = new BN(10).pow(new BN(config.decimals)); // Ensure you're using the correct decimals from the config
+//     base = new BN(10).pow(new BN(localConfig.decimals)); // Ensure you're using the correct decimals from the localConfig
 //     dm = new BN(balance).divmod(base);
 //     let integralPart = dm.div.toString();
-//     let fractionalPart = dm.mod.toString(10, config.decimals); // Pad the fractional part to have `config.decimals` digits
+//     let fractionalPart = dm.mod.toString(10, localConfig.decimals); // Pad the fractional part to have `localConfig.decimals` digits
 
 //     return integralPart + "." + fractionalPart;
 // }
@@ -65,27 +71,6 @@ async function connect() {
 		// global.chainToken = substrate.registry.chainToken;
 }
 
-async function getTotalIssuance() {
-    try {
-        const api = await connect();
-
-        console.log("querying the total issuance")
-        let total_issuance = toUnit(await api.query.balances.totalIssuance())
-
-        let data = {
-            issuance: total_issuance,
-        }
-
-        console.log("writing")
-        await fs.writeFile('dot-balances.json', JSON.stringify(data));
-
-        process.exit(0)
-    } catch (e) {
-        console.log(e);
-        process.exit(1)
-    }
-}
-
 
 // Main function
 
@@ -103,7 +88,7 @@ async function takeSnapshot() {
             page = parseInt(lastKeyData.split('-')[1]) + 1;
         }
 
-        const fileStream = fs.createWriteStream('dot-balances-new-dwellir2.json', { flags: 'a' });
+        const fileStream = fs.createWriteStream(fileName, { flags: 'a' });
 
         while (true) {
             console.log(`querying account entries... page: ${page}`);
@@ -120,20 +105,26 @@ async function takeSnapshot() {
             pageAccounts.forEach(account => {
                 let address = encodeAddress(account[0].slice(-32));
                 let accountData = account[1].data;
-
+            
                 let free = accountData.free || new BN(0);
                 let reserved = accountData.reserved || new BN(0);
                 let locked = accountData.frozen || new BN(0); 
-                let total = free.add(reserved).add(locked);
-
+            
+                // Assuming 'Free' balance is the total effective balance
+                let total = free.add(reserved);
+            
                 let accountBalance = {
-                    "AccountId": address, "Free": toUnit(free), "Reserved": toUnit(reserved), "Locked": toUnit(locked), "Total": toUnit(total),
+                    "AccountId": address, 
+                    "Free": toUnit(free), 
+                    "Reserved": toUnit(reserved), 
+                    "Locked": toUnit(locked), 
+                    "Total": toUnit(total),
                 };
-
+            
                 // Write each account on a separate line
                 fileStream.write(JSON.stringify(accountBalance) + '\n');
             });
-
+            
             lastKey = pageAccounts[pageAccounts.length - 1][0];
             fs.writeFileSync(lastKeyFile, `${lastKey}-${page}`);
 
@@ -141,7 +132,7 @@ async function takeSnapshot() {
         }
 
         console.log("Snapshot taken successfully.");
-        fileStream.end(); // Close the file stream
+        fileStream.end(); 
 
     } catch (error) {
         console.error("Error occurred:", error);

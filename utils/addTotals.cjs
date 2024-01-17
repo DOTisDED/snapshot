@@ -2,7 +2,7 @@ const fs = require('fs');
 const readline = require('readline');
 const path = require('path');
 
-const snapshotFilePath = path.join(__dirname, '../updatedSnapshot.json'); // replace with your custom file path
+const snapshotFilePath = path.join(__dirname, '../dot-balances-new-dwellir5.json'); 
 
 async function sumTotalsInSnapshot() {
     const fileStream = fs.createReadStream(snapshotFilePath);
@@ -12,6 +12,7 @@ async function sumTotalsInSnapshot() {
     });
 
     let totalSum = BigInt(0);
+    let accountCount = 0; // counter for the number of accounts processed
 
     for await (const line of rl) {
         if (line.trim()) { // Skip empty lines
@@ -19,13 +20,15 @@ async function sumTotalsInSnapshot() {
                 const accountData = JSON.parse(line);
                 const total = BigInt(accountData.Total || "0");
                 totalSum += total;
+                accountCount++; 
             } catch (err) {
                 console.error(`Error parsing line: ${err}`);
             }
         }
     }
 
-    console.log(`Total sum of 'Total' values: ${totalSum.toString()}`);
+    console.log(`sum total of 'Total' values: ${totalSum.toString()}`);
+    console.log(`number of accounts processed: ${accountCount}`);
 }
 
 sumTotalsInSnapshot().catch(console.error);

@@ -9,7 +9,7 @@ import {
 	decodeAddress,
 } from '@polkadot/util-crypto';
 
-import balances from "./balances.json"// assert {type: "json"};
+import balances from "../balances.json"// assert {type: "json"};
 import total_issuance from './issuance.json'// assert {type: "json"};
 import crowdloan from './crowdloan.json'// assert {type: "json"};
 import 'dotenv/config'

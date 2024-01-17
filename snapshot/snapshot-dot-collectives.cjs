@@ -215,26 +215,26 @@ async function takeSnapshot() {
             pageAccounts.forEach(account => {
                 let address = encodeAddress(account[0].slice(-32));
                 let accountData = account[1].data;
-
+            
                 let free = accountData.free || new BN(0);
                 let reserved = accountData.reserved || new BN(0);
                 let locked = accountData.frozen || new BN(0); 
-                
-                let total = free.add(reserved).add(locked);
-
-                balances[address] = {
-                    "AccountId": address,
-                    "Free": toUnit(free),
-                    "Reserved": toUnit(reserved),
-                    "Locked": toUnit(locked),
+            
+                // Assuming 'Free' balance is the total effective balance
+                let total = free.add(reserved);
+            
+                let accountBalance = {
+                    "AccountId": address, 
+                    "Free": toUnit(free), 
+                    "Reserved": toUnit(reserved), 
+                    "Locked": toUnit(locked), 
                     "Total": toUnit(total),
                 };
+            
+                // Write each account on a separate line
+                fileStream.write(JSON.stringify(accountBalance) + '\n');
             });
-
-            // Append data for this page
-            fileStream.write(JSON.stringify(balances, null, 2) + '\n');
-
-            // Save the lastKey for the next iteration
+            
             lastKey = pageAccounts[pageAccounts.length - 1][0];
             fs.writeFileSync(lastKeyFile, `${lastKey}-${page}`);
 

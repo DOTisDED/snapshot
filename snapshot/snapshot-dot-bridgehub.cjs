@@ -2,7 +2,7 @@ const { BN } = require("@polkadot/util");
 const { encodeAddress } = require("@polkadot/util-crypto");
 const { WsProvider, ApiPromise } = require("@polkadot/api");
 const fs = require('fs');
-const lastKeyFile = 'lastKey3.txt';
+const lastKeyFile = 'lastKeyBridgeHub.txt';
 
 
 //const { spec } = require('@edgeware/node-types');
@@ -10,9 +10,9 @@ const { spec } = require('@polkadot/types');
 
 const config = {
     // blockNumber: 18871235,
-    blockNumber: "5355206",
+    blockNumber: "1675172",
     // endpoint:"wss://dot-rpc.stakeworld.io/",
-    endpoint: "wss://statemint-rpc.dwellir.com/",
+    endpoint: "wss://polkadot-bridge-hub-rpc.polkadot.io/",
     decimals: 10,
     outputFilePath: 'block-data.json',
     filePathGetParaHead: 'para-head.json'
@@ -197,7 +197,7 @@ async function takeSnapshot() {
         }
 
         // Use a write stream for efficient file writing
-        const fileStream = fs.createWriteStream('dot-test-assethub-balances.json', { flags: 'a' });
+        const fileStream = fs.createWriteStream('dot-test-bridgehub-balances.json', { flags: 'a' });
 
         while (true) {
             console.log(`querying account entries... page: ${page}`);
@@ -215,31 +215,32 @@ async function takeSnapshot() {
             pageAccounts.forEach(account => {
                 let address = encodeAddress(account[0].slice(-32));
                 let accountData = account[1].data;
-
+            
                 let free = accountData.free || new BN(0);
                 let reserved = accountData.reserved || new BN(0);
                 let locked = accountData.frozen || new BN(0); 
-                
-                let total = free.add(reserved).add(locked);
-
-                balances[address] = {
-                    "AccountId": address,
-                    "Free": toUnit(free),
-                    "Reserved": toUnit(reserved),
-                    "Locked": toUnit(locked),
+            
+                // Assuming 'Free' balance is the total effective balance
+                let total = free.add(reserved);
+            
+                let accountBalance = {
+                    "AccountId": address, 
+                    "Free": toUnit(free), 
+                    "Reserved": toUnit(reserved), 
+                    "Locked": toUnit(locked), 
                     "Total": toUnit(total),
                 };
+            
+                // Write each account on a separate line
+                fileStream.write(JSON.stringify(accountBalance) + '\n');
             });
-
-            // Append data for this page
-            fileStream.write(JSON.stringify(balances, null, 2) + '\n');
-
-            // Save the lastKey for the next iteration
+            
             lastKey = pageAccounts[pageAccounts.length - 1][0];
             fs.writeFileSync(lastKeyFile, `${lastKey}-${page}`);
 
             page++;
         }
+
 
         console.log("Snapshot taken successfully.");
         fileStream.end(); // Close the file stream

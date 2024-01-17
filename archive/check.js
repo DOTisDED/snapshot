@@ -10,7 +10,7 @@ import {
 } from '@polkadot/util-crypto';
 import * as fs from 'fs/promises';
 
-import balances from "./balances.json"// assert {type: "json"};
+import balances from "../balances.json"// assert {type: "json"};
 import total_issuance from './issuance.json'// assert {type: "json"};
 import crowdloan from './crowdloan.json'// assert {type: "json"};
 
