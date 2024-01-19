@@ -28,7 +28,7 @@ async function main() {
         console.log(`Total issuance at block ${blockNumber}: ${totalIssuance}`);
 
         // 4. Calculate and display the discrepancy
-        let discrepancy = BigInt(totalIssuance) - totalSum;
+        let discrepancy = BigInt(totalIssuance) - BigInt(totalSum);
         console.log(`Discrepancy between total issuance and snapshot totals: ${discrepancy.toString()}`);
     } catch (error) {
         console.error(`Error in main execution: ${error}`);

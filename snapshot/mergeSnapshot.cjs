@@ -58,10 +58,10 @@ async function mergeSnapshots(snapshot1Path, snapshot2Path, mergedFilePath, audi
 
 
 async function main() {
-    const snapshot1Path = './mergedSnapshot2.json';
-    const snapshot2Path = './BH-balances-new-dwellir-1675172.json';
-    const mergedFilePath = './mergedSnapshot3.json';
-    const auditFilePath = './AUDITmergedSnapshot3.txt';
+    const snapshot1Path = './mergedSnapshot3.json';
+    const snapshot2Path = './accountsFromPools.json';
+    const mergedFilePath = './mergedSnapshotWithNomBalances.json';
+    const auditFilePath = './AUDITmergedSnapshotWithNomBalances.txt';
 
     await mergeSnapshots(snapshot1Path, snapshot2Path, mergedFilePath, auditFilePath);
 }
