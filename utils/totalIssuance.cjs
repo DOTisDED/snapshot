@@ -15,13 +15,13 @@ function toUnit(balance) {
 }
 
 // Function to get the total issuance at a specific block number
-async function getTotalIssuance() {
+async function getTotalIssuance(blockNumber = config.blockNumber) {
     try {
         const api = await connect();
         console.log("Querying the total issuance...");
 
         // Get the hash of the specific block
-        const blockHash = await api.rpc.chain.getBlockHash(config.blockNumber);
+        const blockHash = await api.rpc.chain.getBlockHash(blockNumber);
         // Query the total issuance at that block
         let totalIssuance = await api.query.balances.totalIssuance.at(blockHash);
 
@@ -37,4 +37,4 @@ async function getTotalIssuance() {
     }
     }
     
-    getTotalIssuance();
+module.exports = { getTotalIssuance };

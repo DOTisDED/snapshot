@@ -50,9 +50,9 @@ Just change the rpc and name of the output file to produce snapshots for the dif
 
 ## Count number of accounts in a snapshot
 
-Go to `utils/countAccounts.cjs` and change the `filePath` to the name of the json snapshot you want to check. 
+Go to `utils/addTotals.cjs` and change the `snapshotFileName` to a local file path. and uncomment the function call at the bottom of the page so you can run the script directly from the command line.
 
-`node ./utils/countAccounts.cjs`
+`node ./utils/addTotals.cjs`
 
 
 
@@ -125,6 +125,14 @@ Merge system chain balances to snapshot
 re-allocating funds in a pure proxy back to its owner(s)
 
 Pure Proxies (previously anonymous proxies) are keyless accounts that we need to handle. 
+
+# 7. Bounty Management 
+
+find all the proposers of the bounties and provide them the funds. there are not that many. 
+
+```
+bounties -> bounties(u32): Option<PalletBountiesBounty>
+```
 
 # 7. Replace keyless accounts
 

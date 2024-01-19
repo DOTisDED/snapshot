@@ -8,16 +8,16 @@ const fs = require('fs');
 const { spec } = require('@polkadot/types');
 const config = require('../config.cjs');
 
-const  localConfig = {
-    blockNumber: 18871235,
-    endpoint: "wss://polkadot-rpc.dwellir.com/",
-    decimals: 10,
-    lastKeyFile: './lastKeyDwellir5.txt',
-    fileName: './dot-balances-new-dwellir5.json',
-}
+// const  localConfig = {
+//     blockNumber: 5355206,
+//     endpoint: "wss://statemint-rpc.dwellir.com/",
+//     decimals: 10,
+//     lastKeyFile: './lastKeyDwellir-100000.txt',
+//     fileName: `./dot-balances-new-dwellir-${blockNumber}.json`,
+// }
 
-const lastKeyFile = localConfig.lastKeyFile;
-const fileName = localConfig.fileName;  
+// const lastKeyFile = localConfig.lastKeyFile;
+// const fileName = localConfig.fileName;  
 
 
 // Global Variables
@@ -27,33 +27,13 @@ var global = {
 };
 
 
-// function toUnit(balance) {
-//     base = new BN(10).pow(new BN(localConfig.decimals)); // Ensure you're using the correct decimals from the localConfig
-//     dm = new BN(balance).divmod(base);
-//     let integralPart = dm.div.toString();
-//     let fractionalPart = dm.mod.toString(10, localConfig.decimals); // Pad the fractional part to have `localConfig.decimals` digits
-
-//     return integralPart + "." + fractionalPart;
-// }
-
 function toUnit(balance) {
     return balance.toString();
 }
 
-// Convert a big number balance to expected float with correct units.
-// function toUnit(balance) {
-//     base = new BN(10).pow(new BN(10));
-//     // base = new BN(10).pow(new BN(12));
-//     dm = new BN(balance).divmod(base);
-//     output = parseFloat(dm.div.toString(), ".", dm.mod.toString())
-//     // let decinum = (output / (10 ** 12))
-//     let decinum = (output / (10 ** 10))
-
-//     return decinum
-// } 
 
 // Connect to Substrate endpoint
-async function connect() {
+async function connect(blockNumber) {
 	let endpoint = config.endpoint;
 		global.endpoint = endpoint;
 		const provider = new WsProvider(endpoint);
@@ -64,7 +44,7 @@ async function connect() {
             //     ResourceId: "u32",
             // }
         });
-        const blockHash = await api.rpc.chain.getBlockHash(config.blockNumber);
+        const blockHash = await api.rpc.chain.getBlockHash(blockNumber);
         const api_at = await api.at(blockHash);
         return api_at;
 		// global.chainDecimals = substrate.registry.chainDecimals;
@@ -74,10 +54,10 @@ async function connect() {
 
 // Main function
 
-async function takeSnapshot() {
+async function takeSnapshot(blockNumber = localConfig.blockNumber, fileName = localConfig.fileName, lastKeyFile = localConfig.lastKeyFile) {
     try {
         console.log("connecting...");
-        const api = await connect();
+        const api = await connect(blockNumber);
         let lastKey = null;
         let pageSize = 1000;
         let page = 1;
@@ -136,9 +116,8 @@ async function takeSnapshot() {
 
     } catch (error) {
         console.error("Error occurred:", error);
-    } finally {
-        process.exit(0);
-    }
+        throw error;
+    } 
 }
 
-takeSnapshot();
+module.exports = { takeSnapshot };

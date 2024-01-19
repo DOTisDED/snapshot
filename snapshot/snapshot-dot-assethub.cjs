@@ -10,10 +10,11 @@ const { spec } = require('@polkadot/types');
 const localConfig = {
     relayBlockNumber: 18871235,
     paraId: "1,000",
+    blockNumber: 5355206,
     relayEndpoint:"wss://dot-rpc.stakeworld.io/",
     endpoint: "wss://statemint-rpc.dwellir.com/",
     decimals: 10,
-    assetHubSnapshot: './snapshot/dot-assethub-snapshot.json',
+    assetHubSnapshot: `./snapshot/dot-assethub-snapshot-${relayBlockNumber}.json`,
     filePathGetParaHead: 'para-head2.json',
 }
 

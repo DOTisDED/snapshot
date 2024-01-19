@@ -2,9 +2,10 @@ const fs = require('fs');
 const readline = require('readline');
 const path = require('path');
 
-const snapshotFilePath = path.join(__dirname, '../dot-balances-new-dwellir5.json'); 
+const snapshotFilePath = path.join(__dirname, '../mergedSnapshot3.json'); 
 
-async function sumTotalsInSnapshot() {
+// async function sumTotalsInSnapshot(snapshotFileName) { // uncoment to make it accessible by the snapshotAndAddTotals.cjs
+async function sumTotalsInSnapshot() {    
     const fileStream = fs.createReadStream(snapshotFilePath);
     const rl = readline.createInterface({
         input: fileStream,
@@ -32,3 +33,5 @@ async function sumTotalsInSnapshot() {
 }
 
 sumTotalsInSnapshot().catch(console.error);
+
+// module.exports = { sumTotalsInSnapshot };
