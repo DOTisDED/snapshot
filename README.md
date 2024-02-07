@@ -171,6 +171,13 @@ Once we have our batchAnalysis file we can run the `findLeftOvers.cjs` file whic
 
 # 9. Check distribution on Chain
 
+### Get OnChain Balances
+
+1.  use ` node ./distribution/Asset/checkisAssetIsOnChain.cjs`, make sure to add the correct snapshot file path, then it will check all balances in the snapshot and see if they are on chain. A new file will be created adding a field `onChainBalance` so that it can be compared. 
+
+### Check is there is any difference between snapshot and OnChain balances. 
+
+1. use `node ./distribution/Asset/separateDiffFromNonDiff.cjs` to see if there any discrepencies. If there are, then a file will be created to show the discrepencies. 
 
 # Utils
 
@@ -186,10 +193,9 @@ Add private key to env file which can be used to distribute funds on-chain.
 
 # TODO
 - script to get para head and save it. 
-- pure proxy script
 
 # Improvements
 - Automate through all scripts
 - replace manual work for scripted
 - update common JS. 
-- Create CLI app?
+- Create CLI app? called Subsnap, an app to snapshot any substrate chain and disitribute as an asset (or as a genesis distribution on another chain). 
