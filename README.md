@@ -151,12 +151,33 @@ keyless accounts we cover:
 
 # 8. Distribute Snapshot to Chain
 
+There are 3 main stages to distribution: Distribute EDs, and then frozen balances and thereafter thaw balances. 
+
+## Distribute EDs
+
+First we distribute EDs onchain with the `node ./distribution/distributeEDs.cjs`. This will send batchAll transactions contain a batch of transfers. 
+
+### Check EDs
+
+Not all batches will be successful the first time. So we run `node ./distribution/checkEDsOnChain.cjs` this will create a file `./logs/batchAnalysis.txt`. 
+
+### Cross Referencing Batches (finding left overs)
+
+Once we have our batchAnalysis file we can run the `findLeftOvers.cjs` file which will produce a new snapshot with all the accounts that still need to be added on chain in batches. 
+
+## Add frozen balances
+
+## Thaw balances 
+
 # 9. Check distribution on Chain
 
 
 # Utils
 
 Add Totals in snapshot by calling `node ./utils/addTotals.cjs`
+
+Add mnemonic phrase to .env file to produce private key, or:
+Add private key to env file which can be used to distribute funds on-chain. 
 
 # FAQ
 
