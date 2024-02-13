@@ -14,7 +14,7 @@ const localConfig = {
     relayEndpoint:"wss://dot-rpc.stakeworld.io/",
     endpoint: "wss://statemint-rpc.dwellir.com/",
     decimals: 10,
-    assetHubSnapshot: `./snapshot/dot-assethub-snapshot-${relayBlockNumber}.json`,
+    assetHubSnapshot: `./snapshot/dot-assethub-snapshot-18871235.json`,
     filePathGetParaHead: 'para-head2.json',
 }
 
@@ -28,8 +28,7 @@ async function connect() {
 		const provider = new WsProvider(endpoint);
 		const api = await ApiPromise.create({
             provider,
-            ...spec
-            // types: {
+            noInitWarn: true            // types: {
             //     ResourceId: "u32",
             // }
         });
@@ -43,7 +42,7 @@ async function connect() {
 // Function to connect to the Polkadot relay chain
 async function connectToRelayChain() {
     const provider = new WsProvider(localConfig.relayEndpoint);
-    const api = await ApiPromise.create({ provider });
+    const api = await ApiPromise.create({ provider, noInitWarn: true });
     return api;
 }
 

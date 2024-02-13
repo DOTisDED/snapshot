@@ -39,14 +39,16 @@ async function connect(blockNumber) {
 		const provider = new WsProvider(endpoint);
 		const api = await ApiPromise.create({
             provider,
-            ...spec
+            noInitWarn: true
+         //   ...spec
             // types: {
             //     ResourceId: "u32",
             // }
         });
-        const blockHash = await api.rpc.chain.getBlockHash(blockNumber);
-        const api_at = await api.at(blockHash);
-        return api_at;
+        console.log(`getting block hash:`, blockNumber);
+      //  const blockHash = await api.rpc.chain.getBlockHash(blockNumber);
+      //  const api_at = await api.at(blockHash);
+        return api;
 		// global.chainDecimals = substrate.registry.chainDecimals;
 		// global.chainToken = substrate.registry.chainToken;
 }

@@ -1,8 +1,0 @@
-node_modules
-yarn.lock
-.env
-logs
-mergedSnapshots
-audits
-lastKeys
-archive

@@ -34,7 +34,7 @@ async function connect() {
 		const provider = new WsProvider(endpoint);
 		const api = await ApiPromise.create({
             provider,
-            ...spec
+            noInitWarn: true
             // types: {
             //     ResourceId: "u32",
             // }
@@ -57,7 +57,7 @@ async function getTotalIssuance() {
             issuance: total_issuance,
         }
 
-        console.log("writing")
+        console.log("writing to edg-snapshot-new.json")
         await fs.writeFile('edg-snapshot-new.json', JSON.stringify(data));
 
         process.exit(0)
@@ -99,7 +99,7 @@ async function takeSnapshot() {
             
 		}
 
-        console.log("writing")
+        console.log("writing to kab")
         await fs.writeFile('kab-balances-new.json', JSON.stringify(balances));
         process.exit(0)
 	} catch (error) {

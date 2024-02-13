@@ -12,7 +12,7 @@ const lastKeyFile = `./lastKeys/${baseFileName}_lastKey3.txt`; // File to keep t
 
 
 async function checkAccountsForAsset() {
-    const api = await ApiPromise.create({ provider: wsProvider });
+    const api = await ApiPromise.create({ provider: wsProvider, noInitWarn: true });
 
     const checkedFileName = `${baseFileName}_AndOnChainTotal.json`;
     const noAccountFileName = `${baseFileName}_NoAccount.json`;

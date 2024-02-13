@@ -8,7 +8,7 @@ const config = require('../config.cjs');
 
 const connect = async () => {
     const provider = new WsProvider(config.endpoint);
-    const api = await ApiPromise.create({ provider, ...spec });
+    const api = await ApiPromise.create({ provider, noInitWarn: true });
     return api;
 }
 

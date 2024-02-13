@@ -53,7 +53,7 @@ async function connect() {
 		const provider = new WsProvider(endpoint);
 		const api = await ApiPromise.create({
             provider,
-            ...spec
+            noInitWarn: true
             // types: {
             //     ResourceId: "u32",
             // }
