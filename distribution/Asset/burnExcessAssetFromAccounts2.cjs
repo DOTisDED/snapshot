@@ -20,7 +20,7 @@ const localConfig = {
 };
 
 async function burnExcessAssets() {
-    const api = await ApiPromise.create({ provider: wsProvider });
+    const api = await ApiPromise.create({ provider: wsProvider, noInitWarn: true });
     const keyring = new Keyring({ type: 'sr25519' });
     const privateKey = hexToU8a(process.env.PRIVATE_KEY);
     const sender = keyring.addFromSeed(privateKey);

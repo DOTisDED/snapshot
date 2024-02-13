@@ -8,7 +8,7 @@ const startingBlockNumber = 3661102; // Adjust this number based on where you wa
 const outputLogFile = './logs/assetTransactionAnalysis.txt';
 
 async function analyzeBlocks() {
-    const api = await ApiPromise.create({ provider: wsProvider });
+    const api = await ApiPromise.create({ provider: wsProvider, noInitWarn: true });
     const logStream = fs.createWriteStream(outputLogFile, { flags: 'a' });
 
     let currentBlockNumber = startingBlockNumber;

@@ -6,7 +6,7 @@ const getTotalIssuance = require('./totalIssuance.cjs').getTotalIssuance;
 
 async function main() {
     try {
-        let blockNumber = 1675172; 
+        let blockNumber = 18871235; 
         let snapshotFileName = `./BH-balances-new-dwellir-${blockNumber}.json`;
         let lastKeyFileName = `./lastKeyDwellir-${blockNumber}.txt`;
 

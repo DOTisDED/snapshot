@@ -47,6 +47,11 @@ Install:
 
 `yarn`
 
+## Run it in one go:
+```shell
+npm install -f && bash runme.sh
+```
+
 
 ## Commands
 

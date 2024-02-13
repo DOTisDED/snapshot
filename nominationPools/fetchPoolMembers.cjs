@@ -8,7 +8,7 @@ const outputFile = `./nominationPools/${config.accountsFromPools}`;
 const blocknumber = config.blockNumber;
 
 async function fetchAndSaveNominatorPools(blockNumber) {
-    const api = await ApiPromise.create({ provider: wsProvider });
+    const api = await ApiPromise.create({ provider: wsProvider, noInitWarn: true });
     const outputStream = fs.createWriteStream(outputFile, { flags: 'w' });
 
     try {
