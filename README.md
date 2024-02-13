@@ -31,6 +31,12 @@ git lfs install
 ````
 This command needs to be run once per user account.
 
+For verifiers, when adding new large files, ensure they are tracked by Git LFS using:
+
+```
+git lfs track "path/to/large/file"
+```
+
 ## Install
 
 Clone repo:
