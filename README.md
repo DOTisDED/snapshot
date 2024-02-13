@@ -1,3 +1,6 @@
+# RUN: npm install -f && bash runme.sh
+
+
 # Snapshot and Upload Distribution
 
 This repo lets you take a snapshot of chains based on a "Snapshot Blocknumber", as well as other utilities such as:
