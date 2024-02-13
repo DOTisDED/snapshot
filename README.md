@@ -11,6 +11,26 @@ This repo lets you take a snapshot of chains based on a "Snapshot Blocknumber", 
 - verifying your distribution, by snapshotting a new disitrubtion and comparing against an original snapshot to ensure perfect distribution
 
 
+## Prerequisites
+
+Before cloning and working with this repository, ensure you have Git and Git LFS installed on your machine.
+
+### Installing Git LFS
+Git Large File Storage (LFS) is used in this repository to efficiently manage large files. Follow the steps below to install Git LFS:
+
+1. Download and Install Git LFS
+
+Visit the [Git LFS website](https://git-lfs.com/) and download the version compatible with your operating system.
+Follow the installation instructions for your platform.
+
+2. Setup Git LFS
+
+Once Git LFS is installed, set it up by running the following command in your terminal:
+```
+git lfs install
+````
+This command needs to be run once per user account.
+
 ## Install
 
 Clone repo:
