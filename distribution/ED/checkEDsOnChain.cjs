@@ -6,7 +6,7 @@ const startingBlockNumber = 3650741; // Adjust this number based on your require
 const outputLogFile = './logs/batchAnalysis5.txt';
 
 async function analyzeBlocks() {
-    const api = await ApiPromise.create({ provider: wsProvider });
+    const api = await ApiPromise.create({ provider: wsProvider, noInitWarn: true });
     const logStream = fs.createWriteStream(outputLogFile, { flags: 'a' });
     let firstBatchLogged = false;  // Flag to log the first batch
 

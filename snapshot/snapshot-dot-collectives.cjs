@@ -60,7 +60,7 @@ async function connect() {
 		const provider = new WsProvider(endpoint);
 		const api = await ApiPromise.create({
             provider,
-            ...spec
+            noInitWarn: true
             // types: {
             //     ResourceId: "u32",
             // }
@@ -75,7 +75,7 @@ async function connect() {
 // Function to connect to the Polkadot relay chain
 async function connectToRelayChain() {
     const provider = new WsProvider(config.endpoint);
-    const api = await ApiPromise.create({ provider });
+    const api = await ApiPromise.create({ provider, noInitWarn: true });
     return api;
 }
 

@@ -30,9 +30,8 @@ async function sumTotalsInSnapshot() {
 
     console.log(`sum total of 'Total' values: ${totalSum.toString()}`);
     console.log(`number of accounts processed: ${accountCount}`);
-    return totalSum;
 }
 
-//sumTotalsInSnapshot().catch(console.error);
+sumTotalsInSnapshot().catch(console.error);
 
- module.exports = { sumTotalsInSnapshot };
+// module.exports = { sumTotalsInSnapshot };

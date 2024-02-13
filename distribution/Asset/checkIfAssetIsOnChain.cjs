@@ -16,7 +16,7 @@ const unfrozenFileName = `${baseFileName}_unfrozen3_2.json`;
 const noAccountFileName = `${baseFileName}_NoAccount3_2.json`;
 
 async function checkAccountsForAsset() {
-    const api = await ApiPromise.create({ provider: wsProvider });
+    const api = await ApiPromise.create({ provider: wsProvider, noInitWarn: true });
 
     // Ensure output files are empty or create them if they don't exist
     // fs.writeFileSync(frozenFileName, '');
