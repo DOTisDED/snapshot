@@ -2,7 +2,7 @@ const fs = require('fs');
 const readline = require('readline');
 const config = require('../config.cjs');
 
-const mainSnapshotFile = `./live/${config.mainSnapshotFile}`;
+const mainSnapshotFile = `./live/DOT-balances-live-dwellir-19952000_NoZB.json`;
 const poolsDataFile = `./nominationPools/${config.accountsFromPools}`;
 const updatedSnapshotFile = './live/DOT-balances-live-dwellir-19952000_NoZB_NomP.json'; 
 const auditFile = './nominationPools/AUDIT-DOT-balances-live-dwellir-19952000_NoZB_NomP.json';
