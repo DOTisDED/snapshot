@@ -5,6 +5,12 @@
 
 TO VERIFY THE LIVE SNAPSHOT FOLLOW THIS EXACT GUIDE (after installing the dependencies):
 
+0. You can do 1 - 4 below by running:
+
+`bash snapshot.sh` then jump to step 5...
+
+(or you can just do it manually by doing 1-5 below)
+
 1. snapshot DOT on polkadot: 
 
 `node ./utils/snapshotAndAddTotals.cjs`;
