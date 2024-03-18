@@ -4,7 +4,7 @@ const path = require('path');
 
 const updatedSnapshotFile = path.join(__dirname, '../live/DOT-balances-live-dwellir-19952000_NoZB_NomP.json');
 const poolsAddressesFile = path.join(__dirname, 'poolAddresses.json');
-const outputFile = path.join(__dirname, '../live/DOT-balances-live-dwellir-19952000_NoZB_NomPoolDone.json');
+const outputFile = path.join(__dirname, '../DOT-balances-live-dwellir-19952000_NoZB_NomPoolDone.json');
 
 async function removeNominationPoolAccounts() {
     const poolsAddressesData = JSON.parse(fs.readFileSync(poolsAddressesFile, 'utf-8'));

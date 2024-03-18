@@ -1,5 +1,40 @@
 # Snapshot and Upload Distribution
 
+
+-----
+
+TO VERIFY THE LIVE SNAPSHOT FOLLOW THIS EXACT GUIDE (after installing the dependencies):
+
+1. snapshot DOT on polkadot: 
+
+`node ./utils/snapshotAndAddTotals.cjs`;
+
+2. then remove zero balances from snapshot, run:
+
+ `node ./distribution/Asset/removeZeroBalances.cjs`
+
+3. extract balances from nomination pools:
+
+`node ./nominationPools/addPoolMembersToSnapshot.cjs`
+
+4. remove nomination pools 
+
+`node ./nominationPools/removePoolsFromSnapshot.cjs`
+
+5. Then go to the file that is already in the root directory called `DOT-balances-live-dwellir-19952000_NoZB_NomPoolDone`, search for the treasury (`5EYCAe5ijiYfyeZ2JJCGq56LmPyNRAKzpG4QkoQkkQNB5e6Z`) and remove it. 
+
+Then you should have exactly the same snapshot file as the file `DOT-balances-live-dwellir-19952000_NoZB_NomPoolTreasuryDone.json` in the root directory!
+
+
+----------
+
+
+
+
+
+
+
+
 This repo lets you take a snapshot of chains based on a "Snapshot Blocknumber", as well as other utilities such as:
 
 - finding keyless accounts 
