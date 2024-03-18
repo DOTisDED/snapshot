@@ -10,7 +10,7 @@ const { spec } = require('@polkadot/types');
 
 const config = {
     // blockNumber: 18871235,
-    blockNumber: "1675172",
+    blockNumber: 2204516,
     // endpoint:"wss://dot-rpc.stakeworld.io/",
     endpoint: "wss://polkadot-bridge-hub-rpc.polkadot.io/",
     decimals: 10,

@@ -138,7 +138,7 @@ first we get the pool members `node ./nominationPools/fetchPoolMembers.cjs` whic
 - If you find there is (now) more than 600 pool addresses then you need to re fetch and increase the numbder of account for more pool IDs.
 
 2. Then we will use these IDs and remove them from our snapshot. 
-Once we have the pool IDs we need to run a script that finds the addresses in the snapshot, and if that pool ID address exists in the snapshot then we remove the address. Why? Because the total funds are already accounted for when we re-allocate funds back to users. 
+Once we have the pool IDs we need to run a script that finds the addresses in the snapshot, and if that pool ID address exists in the snapshot then we remove the address. Why? Because the total funds are already accounted for when we re-allocate funds back to users. `node ./nominationPools/removePoolsFromSnapshot.cjs`
 
 # 5. Merge Accounts
 

@@ -22,7 +22,7 @@ const rl = readline.createInterface({
 
 rl.on('line', (line) => {
     const accountData = JSON.parse(line);
-    const desiredOnChainBalance = BigInt(accountData.Total) * 1000n;
+    const desiredOnChainBalance = BigInt(accountData.Total) * 36n;
     const actualOnChainBalance = BigInt(accountData.onChainBalance);
     const difference = actualOnChainBalance - desiredOnChainBalance;
 

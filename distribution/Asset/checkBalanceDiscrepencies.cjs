@@ -18,7 +18,7 @@ async function checkBalanceDiscrepancies() {
 
     for await (const line of rl) {
         const account = JSON.parse(line);
-        const onChainBalanceScaled = BigInt(account.onChainBalance) / 1000n; // Scale down the onChainBalance
+        const onChainBalanceScaled = BigInt(account.onChainBalance) / 36n; // Scale down the onChainBalance
         const totalBalance = BigInt(account.Total);
         const difference = onChainBalanceScaled - totalBalance;
 

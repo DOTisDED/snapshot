@@ -2,7 +2,7 @@ const fs = require('fs');
 const readline = require('readline');
 const path = require('path');
 
-const snapshotFilePath = path.join(__dirname, '../mergedSnapshotWithoutNomPools.json'); 
+const snapshotFilePath = path.join(__dirname, '../live/updatedSnapshotLIVE4.json'); 
 
 // async function sumTotalsInSnapshot(snapshotFileName) { // uncoment to make it accessible by the snapshotAndAddTotals.cjs
 async function sumTotalsInSnapshot() {    

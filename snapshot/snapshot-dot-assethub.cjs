@@ -10,13 +10,14 @@ const { spec } = require('@polkadot/types');
 const localConfig = {
     relayBlockNumber: 18871235,
     paraId: "1,000",
-    blockNumber: 5355206,
+    blockNumber: 5883503,
     relayEndpoint:"wss://dot-rpc.stakeworld.io/",
     endpoint: "wss://statemint-rpc.dwellir.com/",
     decimals: 10,
-    assetHubSnapshot: `./snapshot/dot-assethub-snapshot-${relayBlockNumber}.json`,
     filePathGetParaHead: 'para-head2.json',
 }
+
+const assetHubSnapshot = `./Assethub-balances-live-${localConfig.blockNumber}.json`;
 
 
 function toUnit(balance) {
@@ -33,7 +34,7 @@ async function connect() {
             //     ResourceId: "u32",
             // }
         });
-        const blockHash = await api.rpc.chain.getBlockHash(localConfig.relayBlockNumber);
+        const blockHash = await api.rpc.chain.getBlockHash(localConfig.blockNumber);
         const api_at = await api.at(blockHash);
         return api_at;
 		// global.chainDecimals = substrate.registry.chainDecimals;
@@ -103,7 +104,7 @@ async function takeSnapshot() {
         }
 
         // Use a write stream for efficient file writing
-        const fileStream = fs.createWriteStream(config.assetHubSnapshot, { flags: 'a' });
+        const fileStream = fs.createWriteStream(assetHubSnapshot, { flags: 'a' });
 
         while (true) {
             console.log(`querying account entries... page: ${page}`);
@@ -183,8 +184,8 @@ async function main() {
     }
 }
 
-main();
+// main();
 
-
+takeSnapshot();
 
 

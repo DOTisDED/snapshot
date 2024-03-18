@@ -2,11 +2,11 @@ const fs = require('fs');
 const readline = require('readline');
 const path = require('path');
 
-const inputFileName = './mergedSnapshotWithoutNomPools.json';
+const inputFileName = './live/finalMergedSnapshotLIVE.json';
 const inputFile = `./${inputFileName}`;
 const baseFileName = path.basename(inputFileName, '.json');
-const outputFileName = `./logs/${baseFileName}_NoZB.json`;
-const removedFileName = `./logs/${baseFileName}_ZBs.json`; // File for logging removed entries
+const outputFileName = `./live/${baseFileName}_NoZB.json`;
+const removedFileName = `./live/${baseFileName}_ZBs.json`; // File for logging removed entries
 
 async function filterAndLogRemovedAccounts() {
     // Ensure output files are empty or create them if they don't exist

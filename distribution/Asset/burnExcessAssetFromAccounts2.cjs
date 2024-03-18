@@ -67,7 +67,7 @@ async function sendBatch(api, sender, accountDataList, logStream, currentBatch, 
     return new Promise((resolve, reject) => {
         const batchTransactions = accountDataList.flatMap(accountData => {
             // Calculate the amount to burn
-            const amountToBurn = ((BigInt(accountData.Total) * BigInt(accountData.Count) - BigInt(accountData.Total)) * 1000n);
+            const amountToBurn = ((BigInt(accountData.Total) * BigInt(accountData.Count) - BigInt(accountData.Total)) * 36n);
             const thawTx = api.tx.assets.thaw(localConfig.assetId, accountData.AccountId);
             const burnTx = api.tx.assets.burn(localConfig.assetId, accountData.AccountId, amountToBurn);
             const freezeTx = api.tx.assets.freeze(localConfig.assetId, accountData.AccountId);

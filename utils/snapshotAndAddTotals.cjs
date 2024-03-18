@@ -6,9 +6,10 @@ const getTotalIssuance = require('./totalIssuance.cjs').getTotalIssuance;
 
 async function main() {
     try {
-        let blockNumber = 1675172; 
-        let snapshotFileName = `./BH-balances-new-dwellir-${blockNumber}.json`;
-        let lastKeyFileName = `./lastKeyDwellir-${blockNumber}.txt`;
+        // let blockNumber = 19952000; 
+        let blockNumber = 3413819; 
+        let snapshotFileName = `./COLLECTIVES-balances-live-dwellir-${blockNumber}.json`;
+        let lastKeyFileName = `./lastKeyDwellirCOLL-${blockNumber}.txt`;
 
         console.log(`Starting process for block number: ${blockNumber}`);
 

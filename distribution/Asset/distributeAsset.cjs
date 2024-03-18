@@ -72,7 +72,7 @@ async function sendBatch(api, sender, accountDataList, assetId, logStream, curre
     return new Promise((resolve, reject) => {
         try {
             const batchTransactions = accountDataList.flatMap(accountData => {
-                const amountToMint = BigInt(accountData.Total) * 1000n;
+                const amountToMint = BigInt(accountData.Total) * 36n;
                 const mintTx = api.tx.assets.mint(assetId, accountData.AccountId, amountToMint);
                 const freezeTx = api.tx.assets.freeze(assetId, accountData.AccountId);
                 return [mintTx, freezeTx];

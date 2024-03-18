@@ -40,12 +40,13 @@ async function processSnapshot(filePath, accounts, auditStream) {
 }
 
 
-async function mergeSnapshots(snapshot1Path, snapshot2Path, mergedFilePath, auditFilePath) {
+async function mergeSnapshots(snapshotPaths, mergedFilePath, auditFilePath) {
     const accounts = new Map();
     const auditStream = fs.createWriteStream(auditFilePath);
 
-    await processSnapshot(snapshot1Path, accounts, auditStream);
-    await processSnapshot(snapshot2Path, accounts, auditStream);
+    for (const snapshotPath of snapshotPaths) {
+        await processSnapshot(snapshotPath, accounts, auditStream);
+    }
 
     const mergedStream = fs.createWriteStream(mergedFilePath);
     for (const account of accounts.values()) {
@@ -57,13 +58,18 @@ async function mergeSnapshots(snapshot1Path, snapshot2Path, mergedFilePath, audi
 }
 
 
-async function main() {
-    const snapshot1Path = './mergedSnapshot3.json';
-    const snapshot2Path = './accountsFromPools.json';
-    const mergedFilePath = './mergedSnapshotWithNomBalances.json';
-    const auditFilePath = './AUDITmergedSnapshotWithNomBalances.txt';
 
-    await mergeSnapshots(snapshot1Path, snapshot2Path, mergedFilePath, auditFilePath);
+async function main() {
+    const snapshotPaths = [
+        './AH-balances-live-dwellir-5883503.json',
+        './BH-balances-live-dwellir-2204516.json',
+        './COLLECTIVES-balances-live-dwellir-3413819.json',
+        './DOT-balances-live-dwellir-19952000.json'
+    ];
+    const mergedFilePath = './finalMergedSnapshotLIVE.json';
+    const auditFilePath = './AUDITfinalMergedSnapshotLIVE.txt';
+
+    await mergeSnapshots(snapshotPaths, mergedFilePath, auditFilePath);
 }
 
 main();
