@@ -2,7 +2,7 @@ const fs = require('fs');
 const readline = require('readline');
 const path = require('path');
 
-const inputFileName = './live/finalMergedSnapshotLIVE.json';
+const inputFileName = './live/DOT-balances-live-dwellir-19952000.json';
 const inputFile = `./${inputFileName}`;
 const baseFileName = path.basename(inputFileName, '.json');
 const outputFileName = `./live/${baseFileName}_NoZB.json`;

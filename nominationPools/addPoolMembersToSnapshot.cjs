@@ -4,8 +4,8 @@ const config = require('../config.cjs');
 
 const mainSnapshotFile = `./live/${config.mainSnapshotFile}`;
 const poolsDataFile = `./nominationPools/${config.accountsFromPools}`;
-const updatedSnapshotFile = './live/updatedSnapshotLIVE3.json'; 
-const auditFile = './nominationPools/auditFileLIVE3.json';
+const updatedSnapshotFile = './live/DOT-balances-live-dwellir-19952000_NoZB_NomP.json'; 
+const auditFile = './nominationPools/AUDIT-DOT-balances-live-dwellir-19952000_NoZB_NomP.json';
 
 async function updateSnapshotWithPools() {
     let poolsData = await readPoolsData(poolsDataFile);

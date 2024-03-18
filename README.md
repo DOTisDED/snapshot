@@ -123,7 +123,7 @@ first we get the pool members `node ./nominationPools/fetchPoolMembers.cjs` whic
 
 
 ## 2. re-allocate nomination pool member balances with main snapshot
- then we run `node addPoolMembersToSnapshot.cjs` which creates a new snapshot file which:
+ then we run `node ./nominationPools/addPoolMembersToSnapshot.cjs` which creates a new snapshot file which:
  - gets the balances from the `accountsFromPool.json` file.
  - adds the balances of the snapshot with the pool balances re-allocated to the accounts into a new snapshot file. 
  - It also creates an audit file. `./nominationPools/auditFile.json`. 
