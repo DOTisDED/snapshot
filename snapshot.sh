@@ -11,10 +11,10 @@
 
 
 echo "creating snapshot"
-echo "[1/4]snapshotting DOT this might take 10 minutes or more "
-node ./utils/snapshotAndAddTotals.cjs
-echo "[2/4]removing zero balances from snapshot... "
-node ./distribution/Asset/removeZeroBalances.cjs     
+# echo "[1/4]snapshotting DOT this might take 10 minutes or more "
+# node ./utils/snapshotAndAddTotals.cjs
+# echo "[2/4]removing zero balances from snapshot... "
+# node ./distribution/Asset/removeZeroBalances.cjs     
 echo "[3/4] extracting balances from nomination pools  "
 echo "adding balances to snapshot"
 node ./nominationPools/addPoolMembersToSnapshot.cjs    

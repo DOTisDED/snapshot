@@ -120,7 +120,7 @@ function getCurrentBatch() {
     if (fs.existsSync(currentBatchFile)) {
         return parseInt(fs.readFileSync(currentBatchFile, 'utf8'), 10);
     }
-    return 1; // Start from Batch 1 if file doesn't exist
+    return 1; 
 }
 
 function saveCurrentBatch(batchNumber) {
