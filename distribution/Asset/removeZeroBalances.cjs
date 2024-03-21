@@ -2,10 +2,10 @@ const fs = require('fs');
 const readline = require('readline');
 const path = require('path');
 
-const inputFileName = './DOT-balances-live-dwellir-19952000.json';
+const inputFileName = './DOT-balances-live-dwellir-19952000-Two-NomP-RemP-New.json';
 const inputFile = `./${inputFileName}`;
 const baseFileName = path.basename(inputFileName, '.json');
-const outputFileName = `./live/${baseFileName}_NoZB.json`;
+const outputFileName = `./${baseFileName}-NoZB.json`;
 const removedFileName = `./live/${baseFileName}_ZBs.json`; // File for logging removed entries
 
 async function filterAndLogRemovedAccounts() {
