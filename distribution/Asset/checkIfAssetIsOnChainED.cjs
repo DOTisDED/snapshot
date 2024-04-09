@@ -4,11 +4,14 @@ const fs = require('fs');
 const readline = require('readline');
 const path = require('path');
 
-const wsProvider = new WsProvider('wss://rococo-asset-hub-rpc.polkadot.io');
-const inputFileName = './mergedSnapshotWithoutNomPools_NoZB_unfrozen3_withDifferences.json';
+const wsProvider = new WsProvider('wss://polkadot-asset-hub-rpc.polkadot.io');
+// const inputFileName = './DOT-balances-live-dwellir-19952000-Two-NomP-RemP-New-NoZB.json'; 
+const inputFileName = 'checkForEDs.json'; 
 const inputFile = `./${inputFileName}`;
 const baseFileName = path.basename(inputFileName, '.json');
-const lastKeyFile = `./lastKeys/${baseFileName}_lastKey6.txt`;
+const lastKeyFile = `./lastKeys/${baseFileName}_lastKeyLiveED1.txt`; // File to keep track of the last processed line
+
+
 
 // Define files for frozen, unfrozen, and no account scenarios
 const frozenFileName = `${baseFileName}_frozen3_2.json`;

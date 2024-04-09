@@ -23,7 +23,7 @@ async function distributeBalances() {
     const chainDecimals = api.registry.chainDecimals;
 
     //  local nonce
-    const assetId = 47; // Your asset ID
+    const assetId = 30; // Your asset ID
     let currentNonce = await api.rpc.system.accountNextIndex(sender.address);
 
     const fileStream = fs.createReadStream(snapshotFile);

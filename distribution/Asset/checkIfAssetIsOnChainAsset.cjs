@@ -4,18 +4,19 @@ const fs = require('fs');
 const readline = require('readline');
 const path = require('path');
 
-const wsProvider = new WsProvider('wss://rococo-asset-hub-rpc.polkadot.io');
-const inputFileName = './logs/mergedSnapshotWithoutNomPools_NoZB.json'; 
+const wsProvider = new WsProvider('wss://polkadot-asset-hub-rpc.polkadot.io');
+const inputFileName = './DOT-balances-live-dwellir-19952000-Two-NomP-RemP-New-NoZB.json'; 
+// const inputFileName = './checkEDsOnChain.json'; 
 const inputFile = `./${inputFileName}`;
 const baseFileName = path.basename(inputFileName, '.json');
-const lastKeyFile = `./lastKeys/${baseFileName}_lastKey3.txt`; // File to keep track of the last processed line
+const lastKeyFile = `./lastKeys/${baseFileName}_lastKeyLiveAssetOnChain2.txt`; // File to keep track of the last processed line
 
 
 async function checkAccountsForAsset() {
     const api = await ApiPromise.create({ provider: wsProvider });
 
-    const checkedFileName = `${baseFileName}_AndOnChainTotal.json`;
-    const noAccountFileName = `${baseFileName}_NoAccount.json`;
+    const checkedFileName = `${baseFileName}_AndOnChainTotal2.json`;
+    const noAccountFileName = `${baseFileName}_NoAccount2.json`;
 
     // ensure output files are empty or create them if they don't exist
     fs.writeFileSync(checkedFileName, '');
@@ -35,7 +36,7 @@ async function checkAccountsForAsset() {
         try {
             const account = JSON.parse(line);
             const { AccountId } = account;
-            const assetBalanceResult = await api.query.assets.account(47, AccountId); 
+            const assetBalanceResult = await api.query.assets.account(30, AccountId); 
 
             if (assetBalanceResult.isNone) {
                 fs.appendFileSync(noAccountFileName, JSON.stringify(account) + '\n');
@@ -44,7 +45,7 @@ async function checkAccountsForAsset() {
                 const balance = assetBalanceResult.unwrap().balance;
                 // add the onChainBalance field to the account object
                 account.onChainBalance = balance.toString();
-                // if 47, append the modified account object to checked file
+                // if 30, append the modified account object to checked file
                 fs.appendFileSync(checkedFileName, JSON.stringify(account) + '\n');
             }
         } catch (error) {

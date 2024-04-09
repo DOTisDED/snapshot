@@ -1,10 +1,10 @@
 const fs = require('fs');
 const readline = require('readline');
 
-const snapshotFilePath = './mergedSnapshotWithoutNomPools.json';
-const batchAnalysisFilePath = './logs/assetTransactionAnalysis.txt'; 
-const accountsNotAddedFilePath = './logs/accountsNotAddedAssets3.json';
-const accountsAddedMultipleTimesFilePath = './logs/accountsAssetsAddedMultipleTimes3.json';
+const snapshotFilePath = './checkForEDs.json';
+const batchAnalysisFilePath = './logs/assetTransactionAnalysisLiveEDCheck.txt'; 
+const accountsNotAddedFilePath = './NoEDs.json';
+const accountsAddedMultipleTimesFilePath = './logs/accountsAssetsAddedMultipleTimesLiveED.json';
 
 
 // parse batch analysis file

@@ -1,9 +1,9 @@
 const { ApiPromise, WsProvider } = require('@polkadot/api');
 const fs = require('fs');
 
-const wsProvider = new WsProvider('wss://rococo-asset-hub-rpc.polkadot.io');
+const wsProvider = new WsProvider('wss://polkadot-asset-hub-rpc.polkadot.io');
 const startingBlockNumber = 3650741; // Adjust this number based on your requirements
-const outputLogFile = './logs/batchAnalysis5.txt';
+const outputLogFile = './logs/batchAnalysisLive1.txt';
 
 async function analyzeBlocks() {
     const api = await ApiPromise.create({ provider: wsProvider });

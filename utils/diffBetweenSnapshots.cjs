@@ -1,9 +1,9 @@
 const fs = require('fs');
 const readline = require('readline');
 
-const snapshotFile1 = './DOT-balances-live-dwellir-19952000-Two-NomP-RemP-New.json'; // Original snapshot file path
-const snapshotFile2 = './DOT-balances-live-dwellir-19952000-Two-NomP-RemP.json'; // New snapshot file path
-const diffOutputFile = './snapshot-differences.json'; // File to store the differences
+const snapshotFile1 = './nominationPools/accountsFromPoolsLIVE.json'; // Original snapshot file path
+const snapshotFile2 = './nominationPools/accountsFromPoolsLIVEwithUnbondingEras2.json'; // New snapshot file path
+const diffOutputFile = './snapshotDifferencesUnbonding.json'; // File to store the differences
 
 async function readSnapshot(filePath) {
     const snapshotData = {};

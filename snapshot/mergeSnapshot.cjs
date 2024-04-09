@@ -22,16 +22,16 @@ async function processSnapshot(filePath, accounts, auditStream) {
 
             if (accounts.has(accountId)) {
                 const existingAccount = accounts.get(accountId);
-                existingAccount.Free = (BigInt(existingAccount.Free) + BigInt(account.Free)).toString();
-                existingAccount.Reserved = (BigInt(existingAccount.Reserved) + BigInt(account.Reserved)).toString();
-                existingAccount.Locked = (BigInt(existingAccount.Locked) + BigInt(account.Locked)).toString();
+                // existingAccount.Free = (BigInt(existingAccount.Free) + BigInt(account.Free)).toString();
+                // existingAccount.Reserved = (BigInt(existingAccount.Reserved) + BigInt(account.Reserved)).toString();
+                // existingAccount.Locked = (BigInt(existingAccount.Locked) + BigInt(account.Locked)).toString();
                 existingAccount.Total = (BigInt(existingAccount.Total) + BigInt(account.Total)).toString();
                 auditStream.write(`Merged: ${accountId}, New Total: ${existingAccount.Total}\n`);
             } else {
                 // Convert all BigInt properties to strings for new entries as well
-                account.Free = account.Free.toString();
-                account.Reserved = account.Reserved.toString();
-                account.Locked = account.Locked.toString();
+                // account.Free = account.Free.toString();
+                // account.Reserved = account.Reserved.toString();
+                // account.Locked = account.Locked.toString();
                 account.Total = account.Total.toString();
                 accounts.set(accountId, account);
             }
@@ -61,13 +61,12 @@ async function mergeSnapshots(snapshotPaths, mergedFilePath, auditFilePath) {
 
 async function main() {
     const snapshotPaths = [
-        './AH-balances-live-dwellir-5883503.json',
-        './BH-balances-live-dwellir-2204516.json',
-        './COLLECTIVES-balances-live-dwellir-3413819.json',
-        './DOT-balances-live-dwellir-19952000.json'
+        './accountsFromPoolsLIVEwithUnbondingEras2.json',
+        './live/DOT-balances-live-dwellir-19952000-Two.json',
+        
     ];
-    const mergedFilePath = './finalMergedSnapshotLIVE.json';
-    const auditFilePath = './AUDITfinalMergedSnapshotLIVE.txt';
+    const mergedFilePath = './MergedSnapshotLIVE30New.json';
+    const auditFilePath = './AUDITfinalMergedSnapshotLIVE30New.txt';
 
     await mergeSnapshots(snapshotPaths, mergedFilePath, auditFilePath);
 }

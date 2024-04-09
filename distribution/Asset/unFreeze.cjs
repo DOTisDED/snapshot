@@ -4,16 +4,16 @@ const { hexToU8a, stringToU8a, stringToHex } = require('@polkadot/util');
 const fs = require('fs');
 const readline = require('readline');
 
-const wsProvider = new WsProvider('wss://rococo-asset-hub-rpc.polkadot.io'); //
-const snapshotFile = './logs/accountsAssetsAddedMultipleTimes3.json';
-const logFile = './logs/transactionAssetBurnLog.txt';
-const lastKeyFile = './lastKeys/lastKeyBurn1.txt';
-const currentBatchFile = './lastKeys/currentBatchBurn1.txt';
+const wsProvider = new WsProvider('wss://polkadot-asset-hub-rpc.dwellir.com'); 
+const snapshotFile = './DOT-balances-live-dwellir-19952000-Two-NomP-RemP-New-NoZB-SORTED-noTop40.json';
+
+const logFile = './logs/transactionAssetTransferLog_LIVE-UNFREEZE.txt';
+const lastKeyFile = './lastKeyAsset_LIVE-UN-FREEZE.txt';
+const currentBatchFile = './currentBatchAsset_LIVE-UNFREEZE.txt';
 
 
 const localConfig = {
-    batchSize: 450,
-    assetId: 47,
+    batchSize: 800,
 };
 
 async function distributeBalances() {
@@ -31,36 +31,39 @@ async function distributeBalances() {
     const rl = readline.createInterface({ input: fileStream, crlfDelay: Infinity });
 
     const logStream = fs.createWriteStream(logFile, { flags: 'a' });
-    let lastKey = getLastKey() + localConfig.batchSize;
+    let lastKey = getLastKey();
     let currentLine = 0;
-    let currentBatch = getCurrentBatch() + 1;
+    let currentBatch = getCurrentBatch();
     let accountDataList = [];
 
     for await (const line of rl) {
         currentLine++;
+
         if (currentLine <= lastKey) continue;
         const accountData = JSON.parse(line);
         accountDataList.push(accountData);
 
-        if (accountDataList.length >= localConfig.batchSize) {
+        // Check if we've accumulated enough accountData to meet batchSize
+        if (accountDataList.length === localConfig.batchSize) {
             await sendBatch(api, sender, accountDataList, assetId, logStream, currentBatch, currentNonce);
-            lastKey += localConfig.batchSize; // increment lastKey after batch is finalized
-            saveLastKey(lastKey);
-            saveCurrentBatch(++currentBatch); // increment currentBatch after batch is finalized
-            currentNonce++;
-            accountDataList = [];
-            // await delay(12000);
+            lastKey = currentLine; // Update the last processed key to the current line number
+            saveLastKey(lastKey); // Save the updated lastKey
+            currentBatch++; // Increment the batch number for the next batch
+            saveCurrentBatch(currentBatch); // Save the updated batch number
+            currentNonce++; // Prepare nonce for the next transaction
+            accountDataList = []; // Reset accountDataList for accumulating the next batch
         }
     }
 
+    // Check for any remaining accounts in accountDataList after loop completion
     if (accountDataList.length > 0) {
-
         await sendBatch(api, sender, accountDataList, assetId, logStream, currentBatch, currentNonce);
-        saveLastKey(lastKey + accountDataList.length);
-        saveCurrentBatch(++currentBatch);
-        currentNonce++;
-        // await delay(12000);
+        lastKey += accountDataList.length; // Update the last processed key
+        saveLastKey(lastKey); // Save the lastKey reflecting processed entries of the final partial batch
+        currentBatch++; // Increment batch number as we processed a final partial batch
+        saveCurrentBatch(currentBatch); // Save the final batch number
     }
+
 
     logStream.end();
     console.log('All assets distributed successfully.');
@@ -69,62 +72,47 @@ async function distributeBalances() {
 async function sendBatch(api, sender, accountDataList, assetId, logStream, currentBatch, nonce) {
     return new Promise((resolve, reject) => {
         try {
-            const batchTransactions = accountDataList.flatMap(accountData => {
-                const amountToBurn = ((BigInt(accountData.Total) * BigInt(accountData.Count) - BigInt(accountData.Total)) * 36n);
-                const thawTx = api.tx.assets.thaw(assetId, accountData.AccountId);
-                const burnTx = api.tx.assets.burn(assetId, accountData.AccountId, amountToBurn);
-                const freezeTx = api.tx.assets.freeze(assetId, accountData.AccountId);
-                return [thawTx, burnTx];
+            // Create a batch of thaw transactions
+            const batchTransactions = accountDataList.map(accountData => {
+                // Replace transfer and freeze with a thaw transaction for each account
+                return api.tx.assets.thaw(assetId, accountData.AccountId);
             });
-            const remarkHex = stringToHex(`Asset ${currentBatch}`);
+
+            // Adding a remark transaction to tag each batch uniquely
+            const remarkHex = stringToHex(`Asset Thaw ${currentBatch}`);
             batchTransactions.push(api.tx.system.remarkWithEvent(remarkHex));
             const signedBatch = api.tx.utility.batchAll(batchTransactions);
 
-            console.log(`Submitting Asset Distribution Batch ${currentBatch}, Batch Hash: ${signedBatch.hash.toHex()}`);
-            logStream.write(`Submitting Asset Distribution Batch ${currentBatch}, Batch Hash: ${signedBatch.hash.toHex()}, nonce: ${nonce}\n`);
+            // Submitting the batch transaction
+            console.log(`Submitting Asset Thaw Batch ${currentBatch}, Batch Hash: ${signedBatch.hash.toHex()}`);
+            logStream.write(`Submitting Asset Thaw Batch ${currentBatch}, Batch Hash: ${signedBatch.hash.toHex()}, nonce: ${nonce}\n`);
 
             signedBatch.signAndSend(sender, { nonce: nonce }, ({ status, dispatchError }) => {
                 if (status.isInBlock) {
                     console.log(`Batch ${currentBatch} included at blockHash ${status.asInBlock}, nonce: ${nonce}`);
                     logStream.write(`Batch ${currentBatch} included in block: ${status.asInBlock.toString()}, nonce: ${nonce}\n`);
-                    // resolve(); 
                 }
 
                 if (status.isFinalized) {
                     console.log(`Batch ${currentBatch} finalized at blockHash ${status.asFinalized}`);
                     logStream.write(`Batch ${currentBatch} finalized in block: ${status.asFinalized.toString()}\n`);
-                    resolve(); 
-
+                    resolve();
                 }
 
                 if (dispatchError) {
-                    if (dispatchError.isModule) {
-                        const decoded = api.registry.findMetaError(dispatchError.asModule);
-                        const { docs, name, section } = decoded;
-                        const errorDetails = `${section}.${name}: ${docs.join(' ')}`;
-                        console.error(`Error in batch ${currentBatch}: ${errorDetails}`);
-                        logStream.write(`Error in batch ${currentBatch}: ${errorDetails}\n`);
-                        
-                        // Log account IDs being processed in this batch for context
-                        const accountIds = accountDataList.map(ad => ad.AccountId).join(", ");
-                        console.error(`Affected accounts in this batch: ${accountIds}`);
-                        logStream.write(`Affected accounts in this batch: ${accountIds}\n`);
-                    } else {
-                        console.error(`Error in batch ${currentBatch}: ${dispatchError.toString()}`);
-                        logStream.write(`Error in batch ${currentBatch}: ${dispatchError.toString()}\n`);
-                    }
+                    console.error(`Error in batch ${currentBatch}: ${dispatchError.toString()}`);
+                    logStream.write(`Error in batch ${currentBatch}: ${dispatchError.toString()}\n`);
                     reject(dispatchError);
                 }
             });
-    
-
         } catch (error) {
-            console.error(`Error in asset distribution batch transaction: ${error}`);
-            logStream.write(`Error in asset distribution batch transaction: ${error}\n`);
+            console.error(`Error in asset thaw batch transaction: ${error}`);
+            logStream.write(`Error in asset thaw batch transaction: ${error}\n`);
             reject(error);
         }
     });
 }
+
 
 
 
@@ -145,7 +133,7 @@ function getCurrentBatch() {
     if (fs.existsSync(currentBatchFile)) {
         return parseInt(fs.readFileSync(currentBatchFile, 'utf8'), 10);
     }
-    return 1; 
+    return 0; 
 }
 
 function saveCurrentBatch(batchNumber) {

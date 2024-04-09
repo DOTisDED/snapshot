@@ -2,7 +2,7 @@ const { ApiPromise, WsProvider } = require('@polkadot/api');
 const fs = require('fs');
 
 const wsProvider = new WsProvider('wss://rococo-asset-hub-rpc.polkadot.io');
-const assetId = 47; // Specify the asset ID here
+const assetId = 30; // Specify the asset ID here
 //   3640395
 const startingBlockNumber = 3661102; // Adjust this number based on where you want to start
 const outputLogFile = './logs/assetTransactionAnalysis.txt';
